@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Documents</title>
+  <style>
+            :root {
+      --bg: #f7f4ff;
+      --panel: rgba(255, 255, 255, 0.96);
+      --panel-soft: rgba(244, 247, 255, 0.95);
+      --text: #1f2937;
+      --muted: #5b6b8a;
+      --blue: #5b4bff;
+      --blue-soft: #e4e2ff;
+      --purple: #8f77ff;
+      --pink: #ff7eb6;
+      --teal: #2ac5a9;
+      --border: rgba(139, 152, 255, 0.22);
+      --shadow: 0 24px 60px rgba(64, 84, 171, 0.12);
+    }
+    *{box-sizing:border-box}
+            body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #f6f4ff 0%, #edf7ff 40%, #ffffff 100%);
+      color: var(--text);
+    }
+    .app{min-height:100vh;display:grid;grid-template-columns:260px 1fr;gap:24px;padding:24px}
+        .sidebar {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(240,243,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.24);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .nav-link{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:16px;color:var(--text);text-decoration:none;font-size:15px}
+            .nav-link.active, .nav-link:hover {
+      background: linear-gradient(135deg, rgba(91, 75, 255, 0.16), rgba(255, 126, 182, 0.14));
+      color: var(--blue);
+    }
+    .main{display:grid;gap:24px}
+            .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,247,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.18);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .header-bar{display:flex;align-items:center;justify-content:space-between}
+    .header-bar h2{margin:0}
+    .toolbar{display:flex;gap:12px;align-items:center;margin-top:14px}
+    .search-box,.filter-box{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--border)}
+    .search-box input{border:none;outline:none;background:transparent;width:220px}
+            .action-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #5b4bff, #ff7eb6);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 16px 30px rgba(91, 75, 255, 0.18);
+    }
+    table{width:100%;border-collapse:collapse;margin-top:14px}
+    th,td{padding:14px 12px;text-align:left;border-bottom:1px solid #eef2f6}
+    th{color:var(--muted);font-weight:700}
+    .status{font-size:13px;color:var(--muted)}
+    .icon-btn{background:transparent;border:none;cursor:pointer;padding:6px}
+    .modal-overlay{position:fixed;inset:0;background:rgba(20,30,70,.45);display:none;align-items:center;justify-content:center;padding:24px;z-index:70}
+    .modal-overlay.active{display:flex}
+    .modal{width:min(100%,680px);background:var(--panel);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #eceef1}
+    .modal-        body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #f6f4ff 0%, #edf7ff 40%, #ffffff 100%);
+      color: var(--text);
+    }
+    .field{display:grid;gap:8px}
+    .field input,.field select,.field textarea{padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--panel-soft);outline:none}
+    .modal-actions{display:flex;justify-content:flex-end;gap:10px;padding:12px 20px}
+    @media(max-width:900px){.app{grid-template-columns:1fr}.modal{width:96%}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h1>Employee Management</h1>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="employee-management.html" class="nav-link">Employees</a>
+      <a href="department-management.html" class="nav-link">Departments & Designations</a>
+      <a href="attendance-management.html" class="nav-link">Attendance</a>
+      <a href="leave-management.html" class="nav-link">Leave</a>
+      <a href="performance-appraisal.html" class="nav-link">Performance</a>
+      <a href="project-management.html" class="nav-link">Projects</a>
+      <a href="documents.html" class="nav-link active">Documents</a>
+      <a href="payroll-management.html" class="nav-link">Payroll</a>
+      <a href="reports-management.html" class="nav-link">Reports & Analytics</a>
+      <a href="notifications.html" class="nav-link">Notifications</a>
+      <a href="settings.html" class="nav-link">Settings</a>
+    </aside>
+
+    <main class="main">
+      <section class="panel">
+        <div class="header-bar">
+          <div>
+            <h2>Documents</h2>
+            <div class="status">Manage company documents and uploads</div>
+          </div>
+          <button id="addDocBtn" class="action-button">+ Add Document</button>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box"><span>🔍</span><input id="docSearch" placeholder="Search documents..."></div>
+          <div class="filter-box"><select id="docType"><option value="all">All Types</option><option>Policy</option><option>Form</option><option>Report</option></select></div>
+        </div>
+
+        <div class="panel" style="margin-top:12px">
+          <table id="docsTable">
+            <thead>
+              <tr><th>Document Name</th><th>Owner</th><th>Type</th><th>Uploaded</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Employee Handbook.pdf</td><td>HR</td><td>Policy</td><td>02/01/2025</td><td><button class="icon-btn view-doc">👁️</button></td></tr>
+              <tr><td>Leave Form.docx</td><td>Admin</td><td>Form</td><td>10/02/2025</td><td><button class="icon-btn view-doc">👁️</button></td></tr>
+              <tr><td>Q1 Report.xlsx</td><td>Finance</td><td>Report</td><td>05/04/2025</td><td><button class="icon-btn view-doc">👁️</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Add Document Modal -->
+  <div class="modal-overlay" id="addDocModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addDocTitle">
+      <div class="modal-header"><h3 id="addDocTitle">Add Document</h3><button class="close-button" id="closeAddDoc">×</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Name</label><input id="docName" placeholder="Document title"></div>
+        <div class="field"><label>Owner</label><input id="docOwner" placeholder="Owner name/team"></div>
+        <div class="field"><label>Type</label><select id="docTypeSelect"><option>Policy</option><option>Form</option><option>Report</option></select></div>
+        <div class="field"><label>Upload File</label><input id="docFile" type="file"></div>
+        <div class="modal-actions"><button class="action-button secondary" id="cancelAddDoc">Cancel</button><button class="action-button" id="saveDoc">Save</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Document Modal -->
+  <div class="modal-overlay" id="viewDocModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="viewDocTitle">
+      <div class="modal-header"><h3 id="viewDocTitle">Document Details</h3><button class="close-button" id="closeViewDoc">×</button></div>
+      <div class="modal-body">
+        <div class="field"><label>Name</label><input id="viewDocName" readonly></div>
+        <div class="field"><label>Owner</label><input id="viewDocOwner" readonly></div>
+        <div class="field"><label>Type</label><input id="viewDocType" readonly></div>
+        <div class="field"><label>Uploaded</label><input id="viewDocUploaded" readonly></div>
+        <div class="field"><label>Description / Notes</label><textarea id="viewDocNotes" rows="4" readonly></textarea></div>
+        <div class="modal-actions"><button class="action-button secondary" id="closeViewDocBtn">Close</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Add Document modal
+    const addDocBtn = document.getElementById('addDocBtn');
+    const addDocModal = document.getElementById('addDocModal');
+    const closeAddDoc = document.getElementById('closeAddDoc');
+    const cancelAddDoc = document.getElementById('cancelAddDoc');
+    const saveDoc = document.getElementById('saveDoc');
+
+    addDocBtn.addEventListener('click', ()=> addDocModal.classList.add('active'));
+    closeAddDoc.addEventListener('click', ()=> addDocModal.classList.remove('active'));
+    cancelAddDoc.addEventListener('click', ()=> addDocModal.classList.remove('active'));
+    addDocModal.addEventListener('click', (e)=> { if(e.target===addDocModal) addDocModal.classList.remove('active') });
+
+    // View Doc modal
+    const viewDocModal = document.getElementById('viewDocModal');
+    const viewButtons = document.querySelectorAll('.view-doc');
+    const closeViewDoc = document.getElementById('closeViewDoc');
+    const closeViewDocBtn = document.getElementById('closeViewDocBtn');
+
+    const viewDocName = document.getElementById('viewDocName');
+    const viewDocOwner = document.getElementById('viewDocOwner');
+    const viewDocType = document.getElementById('viewDocType');
+    const viewDocUploaded = document.getElementById('viewDocUploaded');
+    const viewDocNotes = document.getElementById('viewDocNotes');
+
+    // sample documents metadata
+    const documents = [
+      {name:'Employee Handbook.pdf',owner:'HR',type:'Policy',uploaded:'02/01/2025',notes:'Company policies and code of conduct.'},
+      {name:'Leave Form.docx',owner:'Admin',type:'Form',uploaded:'10/02/2025',notes:'Employee leave request form.'},
+      {name:'Q1 Report.xlsx',owner:'Finance',type:'Report',uploaded:'05/04/2025',notes:'Quarterly financials.'}
+    ];
+
+    function openDoc(idx){
+      const d = documents[idx];
+      viewDocName.value = d.name; viewDocOwner.value = d.owner; viewDocType.value = d.type; viewDocUploaded.value = d.uploaded; viewDocNotes.value = d.notes; viewDocModal.classList.add('active');
+    }
+
+    viewButtons.forEach((b,i)=> b.addEventListener('click', ()=> openDoc(i)));
+    closeViewDoc.addEventListener('click', ()=> viewDocModal.classList.remove('active'));
+    closeViewDocBtn.addEventListener('click', ()=> viewDocModal.classList.remove('active'));
+    viewDocModal.addEventListener('click',(e)=> { if(e.target===viewDocModal) viewDocModal.classList.remove('active') });
+
+    // Save new document (demo append)
+    saveDoc.addEventListener('click', ()=>{
+      const name = document.getElementById('docName').value.trim();
+      if(!name) return alert('Enter document name');
+      const owner = document.getElementById('docOwner').value.trim() || '-';
+      const type = document.getElementById('docTypeSelect').value || 'Other';
+      const uploaded = new Date().toLocaleDateString();
+      const notes = '';
+
+      documents.push({name,owner,type,uploaded,notes});
+      const tbody = document.querySelector('#docsTable tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${name}</td><td>${owner}</td><td>${type}</td><td>${uploaded}</td><td><button class="icon-btn view-doc">👁️</button></td>`;
+      tbody.appendChild(tr);
+
+      // wire new view button
+      const newBtn = tr.querySelector('.view-doc');
+      const newIdx = documents.length -1;
+      newBtn.addEventListener('click', ()=> openDoc(newIdx));
+
+      // reset and close
+      document.getElementById('docName').value='';document.getElementById('docOwner').value='';document.getElementById('docFile').value='';
+      addDocModal.classList.remove('active');
+    });
+
+    // simple search filter
+    document.getElementById('docSearch').addEventListener('input', (e)=>{
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('#docsTable tbody tr').forEach((tr,idx)=>{
+        const text = tr.innerText.toLowerCase();
+        tr.style.display = text.includes(q) ? '' : 'none';
+      });
+    });
+  </script>
+<script>
+(function(){
+  try{
+    const file = (location.pathname.split('/').pop() || 'dashboard.html').split('?')[0].split('#')[0];
+    const links = document.querySelectorAll('.sidebar .nav-link');
+    links.forEach(a=>a.classList.remove('active'));
+    for(const a of links){
+      const href = a.getAttribute('href');
+      if(!href) continue;
+      const hrefFile = href.split('/').pop();
+      if(hrefFile === file){ a.classList.add('active'); break; }
+    }
+  }catch(e){/* silent */}
+})();
+</script>
+</body>
+</html>

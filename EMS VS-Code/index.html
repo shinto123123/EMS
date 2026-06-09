@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Management Dashboard</title>
+  <style>
+            :root {
+      --bg: #f7f4ff;
+      --panel: rgba(255, 255, 255, 0.96);
+      --panel-soft: rgba(244, 247, 255, 0.95);
+      --text: #1f2937;
+      --muted: #5b6b8a;
+      --blue: #5b4bff;
+      --blue-soft: #e4e2ff;
+      --purple: #8f77ff;
+      --pink: #ff7eb6;
+      --teal: #2ac5a9;
+      --border: rgba(139, 152, 255, 0.22);
+      --shadow: 0 24px 60px rgba(64, 84, 171, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+            body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #f6f4ff 0%, #edf7ff 40%, #ffffff 100%);
+      color: var(--text);
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      padding: 24px;
+    }
+
+        .sidebar {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(240,243,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.24);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .sidebar h1 {
+      font-size: 16px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 24px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 15px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+            .nav-link.active, .nav-link:hover {
+      background: linear-gradient(135deg, rgba(91, 75, 255, 0.16), rgba(255, 126, 182, 0.14));
+      color: var(--blue);
+    }
+
+    .main {
+      display: grid;
+      gap: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar .search {
+      flex: 1;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .topbar input {
+      border: none;
+      width: 100%;
+      font-size: 14px;
+      outline: none;
+      color: var(--text);
+      background: transparent;
+    }
+
+    .topbar .profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--panel);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .topbar .profile div {
+      text-align: right;
+    }
+
+    .topbar .profile strong {
+      display: block;
+      font-size: 14px;
+    }
+
+            .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,247,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.18);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero h2 {
+      margin: 0 0 10px;
+      font-size: 28px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+        .stat-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(232,236,255,0.95));
+      border-radius: 24px;
+      padding: 22px;
+      border: 1px solid rgba(139, 152, 255, 0.14);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .stat-card span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .highlight {
+      color: var(--blue);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.72fr 0.82fr;
+      gap: 24px;
+    }
+
+    .card-row {
+      display: grid;
+      gap: 18px;
+    }
+
+    .list-card {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .card-header a {
+      color: var(--blue);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .activity-item,
+    .notification-item {
+      background: var(--panel-soft);
+      border-radius: 18px;
+      padding: 16px;
+      display: grid;
+      gap: 6px;
+      border: 1px solid transparent;
+    }
+
+    .activity-item time,
+    .notification-item time {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .activity-item strong,
+    .notification-item strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .activity-item span,
+    .notification-item span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .small-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(232,236,255,0.95));
+      border-radius: 24px;
+      padding: 22px;
+      border: 1px solid rgba(139, 152, 255, 0.14);
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+      width: fit-content;
+    }
+
+    .attendance-chart,
+    .leave-chart {
+      background: var(--panel-soft);
+      border-radius: 24px;
+      padding: 22px;
+      border: 1px solid transparent;
+    }
+
+    .chart-bars {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      height: 180px;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+        .chart-bar {
+      flex: 1;
+      border-radius: 14px 14px 0 0;
+      min-height: 24px;
+      position: relative;
+    }
+    .chart-bar:nth-child(1) { background: linear-gradient(180deg, #5b4bff, rgba(91, 75, 255, 0.35)); }
+    .chart-bar:nth-child(2) { background: linear-gradient(180deg, #ff7eb6, rgba(255, 126, 182, 0.35)); }
+    .chart-bar:nth-child(3) { background: linear-gradient(180deg, #2ac5a9, rgba(42, 197, 169, 0.35)); }
+    .chart-bar:nth-child(4) { background: linear-gradient(180deg, #ffb547, rgba(255, 181, 71, 0.35)); }
+    .chart-bar:nth-child(5) { background: linear-gradient(180deg, #8f77ff, rgba(143, 119, 255, 0.35)); }
+    .chart-bar:nth-child(6) { background: linear-gradient(180deg, #4b7bec, rgba(75, 124, 236, 0.35)); }
+    .chart-bar:nth-child(7) { background: linear-gradient(180deg, #7c6cff, rgba(124, 108, 255, 0.35)); }
+    .chart-bar:nth-child(1) { background: linear-gradient(180deg, #5b4bff, rgba(91, 75, 255, 0.35)); }
+    .chart-bar:nth-child(2) { background: linear-gradient(180deg, #ff7eb6, rgba(255, 126, 182, 0.35)); }
+    .chart-bar:nth-child(3) { background: linear-gradient(180deg, #2ac5a9, rgba(42, 197, 169, 0.35)); }
+    .chart-bar:nth-child(4) { background: linear-gradient(180deg, #ffb547, rgba(255, 181, 71, 0.35)); }
+    .chart-bar:nth-child(5) { background: linear-gradient(180deg, #8f77ff, rgba(143, 119, 255, 0.35)); }
+    .chart-bar:nth-child(6) { background: linear-gradient(180deg, #4b7bec, rgba(75, 124, 236, 0.35)); }
+    .chart-bar:nth-child(7) { background: linear-gradient(180deg, #7c6cff, rgba(124, 108, 255, 0.35)); }
+
+    .chart-bar::after {
+      content: attr(data-value);
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .chart-labels {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .pie-legend {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+            .action-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #5b4bff, #ff7eb6);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 16px 30px rgba(91, 75, 255, 0.18);
+    }
+
+    .action-button:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 1180px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar,
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+          .sidebar {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(240,243,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.24);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h1>Employee Management</h1>
+      <a href="dashboard.html" class="nav-link active">Dashboard</a>
+      <a href="employee-management.html" class="nav-link">Employees</a>
+      <a href="department-management.html" class="nav-link">Departments & Designations</a>
+      <a href="attendance-management.html" class="nav-link">Attendance</a>
+      <a href="leave-management.html" class="nav-link">Leave Management</a>
+      <a href="performance-appraisal.html" class="nav-link">Performance</a>
+      <a href="project-management.html" class="nav-link">Projects</a>
+      <a href="documents.html" class="nav-link">Documents</a>
+      <a href="payroll-management.html" class="nav-link">Payroll</a>
+      <a href="reports-management.html" class="nav-link">Reports & Analytics</a>
+      <a href="notifications.html" class="nav-link">Notifications</a>
+      <a href="settings.html" class="nav-link">Settings</a>
+    </aside>
+
+    <main class="main">
+      <section class="panel hero">
+        <div>
+          <h2>Welcome back, John Doe!</h2>
+          <p>Here's what's happening in your organization today.</p>
+        </div>
+        <a class="action-button" href="#">May 09, 2025</a>
+      </section>
+
+      <section class="stats-grid">
+        <article class="stat-card">
+          <strong>256</strong>
+          <span>Total Employees</span>
+          <a class="action-button" style="margin-top: 12px; width: fit-content; background: #3773db;" href="#">View all</a>
+        </article>
+        <article class="stat-card">
+          <strong>12</strong>
+          <span>Departments</span>
+          <a class="action-button" style="margin-top: 12px; width: fit-content; background: #3773db;" href="#">View all</a>
+        </article>
+        <article class="stat-card">
+          <strong>18</strong>
+          <span>Pending Leaves</span>
+          <a class="action-button" style="margin-top: 12px; width: fit-content; background: #3773db;" href="#">View all</a>
+        </article>
+        <article class="stat-card">
+          <strong>92%</strong>
+          <span>Today's Attendance</span>
+          <a class="action-button" style="margin-top: 12px; width: fit-content; background: #3773db;" href="#">View report</a>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <div class="card-row">
+          <section class="panel list-card">
+            <div class="card-header">
+              <h3>Recent Activities</h3>
+              <a href="#">View all activities</a>
+            </div>
+            <div class="activity-item">
+              <strong>Leave request submitted</strong>
+              <span>Mike Johnson submitted a leave request.</span>
+              <time>10:30 AM</time>
+            </div>
+            <div class="activity-item">
+              <strong>Project update</strong>
+              <span>Website Redesign project updated.</span>
+              <time>09:15 AM</time>
+            </div>
+            <div class="activity-item">
+              <strong>Performance review scheduled</strong>
+              <span>Annual review scheduled for Sarah Lee.</span>
+              <time>Yesterday</time>
+            </div>
+            <div class="activity-item">
+              <strong>Document uploaded</strong>
+              <span>Policy document uploaded by HR.</span>
+              <time>Yesterday</time>
+            </div>
+            <div class="activity-item">
+              <strong>New employee added</strong>
+              <span>Robert Smith joined the organization.</span>
+              <time>2 days ago</time>
+            </div>
+          </section>
+
+          <section class="panel list-card">
+            <div class="card-header">
+              <h3>Upcoming Events</h3>
+              <a href="#">View calendar</a>
+            </div>
+            <div class="activity-item">
+              <strong>Performance Review Meeting</strong>
+              <span>10 May 2025, 10:00 AM</span>
+              <time>MAY 10</time>
+            </div>
+            <div class="activity-item">
+              <strong>Project Deadline</strong>
+              <span>12 May 2025, 06:00 PM</span>
+              <time>MAY 12</time>
+            </div>
+            <div class="activity-item">
+              <strong>Team Building Activity</strong>
+              <span>15 May 2025, 09:00 AM</span>
+              <time>MAY 15</time>
+            </div>
+            <div class="activity-item">
+              <strong>Payroll Processing</strong>
+              <span>20 May 2025, 11:00 AM</span>
+              <time>MAY 20</time>
+            </div>
+          </section>
+        </div>
+
+        <div class="card-row">
+          <section class="panel list-card">
+            <div class="card-header">
+              <h3>Notifications</h3>
+              <a href="#">View all notifications</a>
+            </div>
+            <div class="notification-item">
+              <strong>Leave request from Emma Wilson</strong>
+              <span>10:30 AM</span>
+            </div>
+            <div class="notification-item">
+              <strong>New project assigned to you</strong>
+              <span>09:20 AM</span>
+            </div>
+            <div class="notification-item">
+              <strong>Document requires your signature</strong>
+              <span>Yesterday</span>
+            </div>
+            <div class="notification-item">
+              <strong>Performance review feedback available</strong>
+              <span>Yesterday</span>
+            </div>
+            <div class="notification-item">
+              <strong>Policy update: Work from Home Guidelines</strong>
+              <span>2 days ago</span>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="dashboard-grid">
+        <section class="attendance-chart">
+          <div class="card-header">
+            <h3>Attendance Overview (This Week)</h3>
+            <span class="badge">Average Attendance 92%</span>
+          </div>
+          <div class="chart-bars">
+            <div class="chart-bar" style="height: 72%;" data-value="72%"></div>
+            <div class="chart-bar" style="height: 75%;" data-value="75%"></div>
+            <div class="chart-bar" style="height: 70%;" data-value="70%"></div>
+            <div class="chart-bar" style="height: 80%;" data-value="80%"></div>
+            <div class="chart-bar" style="height: 84%;" data-value="84%"></div>
+            <div class="chart-bar" style="height: 68%;" data-value="68%"></div>
+            <div class="chart-bar" style="height: 60%;" data-value="60%"></div>
+          </div>
+          <div class="chart-labels">
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+            <span>Sun</span>
+          </div>
+          <div class="card-header" style="margin-top: 20px; gap: 16px; flex-wrap: wrap;">
+            <span>Present 236</span>
+            <span>Absent 20</span>
+          </div>
+        </section>
+
+        <section class="leave-chart">
+          <div class="card-header">
+            <h3>Leave Overview</h3>
+            <span>Total Leaves 50</span>
+          </div>
+          <div class="pie-legend">
+            <div class="legend-item">
+              <span class="legend-dot"></span>
+              <strong>Approved</strong>
+              <span>25 (50%)</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #7fa9ff;"></span>
+              <strong>Pending</strong>
+              <span>15 (30%)</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #b8d4ff;"></span>
+              <strong>Rejected</strong>
+              <span>10 (20%)</span>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+<script>
+(function(){
+  try{
+    const file = (location.pathname.split('/').pop() || 'dashboard.html').split('?')[0].split('#')[0];
+    const links = document.querySelectorAll('.sidebar .nav-link');
+    links.forEach(a=>a.classList.remove('active'));
+    for(const a of links){
+      const href = a.getAttribute('href');
+      if(!href) continue;
+      const hrefFile = href.split('/').pop();
+      if(hrefFile === file){ a.classList.add('active'); break; }
+    }
+  }catch(e){/* silent */}
+})();
+</script>
+</body>
+</html>

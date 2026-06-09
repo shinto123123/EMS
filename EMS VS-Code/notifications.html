@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications</title>
+  <style>
+            :root {
+      --bg: #f7f4ff;
+      --panel: rgba(255, 255, 255, 0.96);
+      --panel-soft: rgba(244, 247, 255, 0.95);
+      --text: #1f2937;
+      --muted: #5b6b8a;
+      --blue: #5b4bff;
+      --blue-soft: #e4e2ff;
+      --purple: #8f77ff;
+      --pink: #ff7eb6;
+      --teal: #2ac5a9;
+      --border: rgba(139, 152, 255, 0.22);
+      --shadow: 0 24px 60px rgba(64, 84, 171, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+            body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #f6f4ff 0%, #edf7ff 40%, #ffffff 100%);
+      color: var(--text);
+    }
+
+    .app { min-height: 100vh; display: grid; grid-template-columns: 260px 1fr; gap: 24px; padding: 24px; }
+        .sidebar {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(240,243,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.24);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .sidebar h1 { font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 24px; }
+    .nav-link { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; color: var(--text); text-decoration: none; font-size: 15px; transition: background 0.2s ease, color 0.2s ease; }
+            .nav-link.active, .nav-link:hover {
+      background: linear-gradient(135deg, rgba(91, 75, 255, 0.16), rgba(255, 126, 182, 0.14));
+      color: var(--blue);
+    }
+
+    .main { display: grid; gap: 24px; }
+            .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,247,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.18);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .header-bar { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+    .header-bar h2 { margin: 0; font-size: 28px; }
+    .header-bar p { margin: 0; color: var(--muted); }
+            .action-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #5b4bff, #ff7eb6);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 16px 30px rgba(91, 75, 255, 0.18);
+    }
+    .action-button.outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+
+    .tabs { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .tab { padding: 12px 18px; border-radius: 16px; border: 1px solid var(--border); background: var(--panel); cursor: pointer; color: var(--muted); transition: all 0.2s ease; }
+    .tab.active { background: var(--blue); color: #fff; border-color: transparent; }
+
+    .notifications-list { display: grid; gap: 16px; margin-top: 24px; }
+    .notification-card { background: var(--panel); border: 1px solid var(--border); border-radius: 22px; padding: 20px; box-shadow: var(--shadow); display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; }
+    .notification-card.unread { border-color: var(--blue-soft); background: #f4f7ff; }
+    .notification-icon { width: 48px; height: 48px; border-radius: 16px; display: grid; place-items: center; background: var(--panel-soft); color: var(--blue); font-size: 20px; }
+    .notification-content { display: grid; gap: 8px; }
+    .notification-content strong { margin: 0; font-size: 16px; }
+    .notification-content span { color: var(--muted); font-size: 14px; }
+    .notification-time { color: var(--muted); font-size: 13px; white-space: nowrap; }
+    .notification-actions { display: flex; gap: 10px; }
+    .pill { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--panel-soft); color: var(--muted); font-size: 13px; }
+
+    .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 18px; }
+    .search-box, .filter-box { display: inline-flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 18px; background: var(--panel); border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .search-box input, .filter-box select { border: none; outline: none; background: transparent; font-size: 14px; color: var(--text); }
+
+    @media (max-width: 1080px) { .app { grid-template-columns: 1fr; } .header-bar { flex-direction: column; align-items: flex-start; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h1>Employee Management</h1>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="employee-management.html" class="nav-link">Employees</a>
+      <a href="department-management.html" class="nav-link">Departments & Designations</a>
+      <a href="attendance-management.html" class="nav-link">Attendance</a>
+      <a href="leave-management.html" class="nav-link">Leave</a>
+      <a href="performance-appraisal.html" class="nav-link">Performance</a>
+      <a href="project-management.html" class="nav-link">Projects</a>
+      <a href="documents.html" class="nav-link">Documents</a>
+      <a href="payroll-management.html" class="nav-link">Payroll</a>
+      <a href="reports-management.html" class="nav-link">Reports & Analytics</a>
+      <a href="notifications.html" class="nav-link active">Notifications</a>
+      <a href="settings.html" class="nav-link">Settings</a>
+    </aside>
+
+    <main class="main">
+      <section class="panel">
+        <div class="header-bar">
+          <div>
+            <h2>Notifications</h2>
+            <p class="stat-meta">Review important updates, alerts, and system messages.</p>
+          </div>
+          <button class="action-button">Mark All as Read</button>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active">All (4)</div>
+          <div class="tab">Unread (4)</div>
+          <div class="tab">Read (0)</div>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Search anything..." aria-label="Search notifications" />
+          </div>
+          <div class="filter-box">
+            <select aria-label="Filter category">
+              <option>All Notifications</option>
+              <option>Leave</option>
+              <option>Performance</option>
+              <option>Payroll</option>
+              <option>Projects</option>
+            </select>
+          </div>
+          <div class="filter-box"><span class="pill">Unread</span></div>
+        </div>
+
+        <div class="notifications-list">
+          <article class="notification-card unread">
+            <div class="notification-icon">📅</div>
+            <div class="notification-content">
+              <strong>Leave Request Approved</strong>
+              <span>Your leave request from 15 May 2025 to 17 May 2025 has been approved.</span>
+            </div>
+            <div class="notification-time">10 minutes ago</div>
+          </article>
+
+          <article class="notification-card unread">
+            <div class="notification-icon">⭐</div>
+            <div class="notification-content">
+              <strong>Performance Review Scheduled</strong>
+              <span>Your performance review is scheduled on 25 May 2025 at 11:00 AM.</span>
+            </div>
+            <div class="notification-time">1 hour ago</div>
+          </article>
+
+          <article class="notification-card unread">
+            <div class="notification-icon">💰</div>
+            <div class="notification-content">
+              <strong>Payroll Processed</strong>
+              <span>Your salary for May 2025 has been processed successfully.</span>
+            </div>
+            <div class="notification-time">3 hours ago</div>
+          </article>
+
+          <article class="notification-card unread">
+            <div class="notification-icon">📁</div>
+            <div class="notification-content">
+              <strong>New Project Assigned</strong>
+              <span>You have been assigned to the project “HR Portal”.</span>
+            </div>
+            <div class="notification-time">1 day ago</div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+<script>
+(function(){
+  try{
+    const file = (location.pathname.split('/').pop() || 'dashboard.html').split('?')[0].split('#')[0];
+    const links = document.querySelectorAll('.sidebar .nav-link');
+    links.forEach(a=>a.classList.remove('active'));
+    for(const a of links){
+      const href = a.getAttribute('href');
+      if(!href) continue;
+      const hrefFile = href.split('/').pop();
+      if(hrefFile === file){ a.classList.add('active'); break; }
+    }
+  }catch(e){/* silent */}
+})();
+</script>
+</body>
+</html>

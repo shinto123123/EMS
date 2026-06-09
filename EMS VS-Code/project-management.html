@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Management</title>
+  <style>
+            :root {
+      --bg: #f7f4ff;
+      --panel: rgba(255, 255, 255, 0.96);
+      --panel-soft: rgba(244, 247, 255, 0.95);
+      --text: #1f2937;
+      --muted: #5b6b8a;
+      --blue: #5b4bff;
+      --blue-soft: #e4e2ff;
+      --purple: #8f77ff;
+      --pink: #ff7eb6;
+      --teal: #2ac5a9;
+      --border: rgba(139, 152, 255, 0.22);
+      --shadow: 0 24px 60px rgba(64, 84, 171, 0.12);
+    }
+    *{box-sizing:border-box}
+            body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #f6f4ff 0%, #edf7ff 40%, #ffffff 100%);
+      color: var(--text);
+    }
+    .app{min-height:100vh;display:grid;grid-template-columns:260px 1fr;gap:24px;padding:24px}
+        .sidebar {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(240,243,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.24);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .sidebar h1{font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+    .nav-link{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:16px;color:var(--text);text-decoration:none;font-size:15px;transition:background .2s,color .2s}
+            .nav-link.active, .nav-link:hover {
+      background: linear-gradient(135deg, rgba(91, 75, 255, 0.16), rgba(255, 126, 182, 0.14));
+      color: var(--blue);
+    }
+    .main{display:grid;gap:24px}
+    .header-bar{display:grid;grid-template-columns:1fr auto;align-items:center;gap:18px}
+    .header-bar h2{margin:0;font-size:28px}
+    .header-bar p{margin:6px 0 0;color:var(--muted)}
+    .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+    .search-box,.filter-box{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:18px;background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow)}
+    .search-box input{border:none;outline:none;background:transparent;width:220px;color:var(--text)}
+            .action-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #5b4bff, #ff7eb6);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 16px 30px rgba(91, 75, 255, 0.18);
+    }
+    .action-button.secondary{background:var(--panel-soft);color:var(--blue);border:1px solid var(--border)}
+            .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,247,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.18);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .table-container{overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow)}
+    table{width:100%;border-collapse:collapse;min-width:900px}
+    th,td{padding:16px 18px;text-align:left;border-bottom:1px solid #eceef1;font-size:14px}
+    th{color:var(--muted);font-weight:700;background:rgba(234,238,246,.88);position:sticky;top:0;z-index:1}
+    tbody tr:hover{background:rgba(75,124,236,.07)}
+    .avatar{width:34px;height:34px;border-radius:8px;background:var(--panel-soft);display:inline-flex;align-items:center;justify-content:center;color:var(--muted);margin-right:10px}
+    .status-pill{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;background:var(--panel-soft);color:var(--text);font-weight:600}
+    .pagination{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:20px;color:var(--muted);font-size:14px}
+    .pages{display:flex;gap:10px}
+    .page-button{min-width:42px;padding:10px 14px;border-radius:14px;border:1px solid var(--border);background:var(--panel);color:var(--text);cursor:pointer;font-weight:600}
+    .page-button.active{background:var(--blue);color:#fff;border-color:transparent}
+    /* modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(20,30,70,0.45);display:none;align-items:center;justify-content:center;padding:24px;z-index:60}
+    .modal-overlay.active{display:flex}
+    .modal{width:min(100%,640px);background:var(--panel);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #eceef1}
+    .modal-header h3{margin:0;font-size:18px}
+    .close-button{width:38px;height:38px;border-radius:12px;border:none;background:var(--panel-soft);cursor:pointer}
+    .modal-        body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #f6f4ff 0%, #edf7ff 40%, #ffffff 100%);
+      color: var(--text);
+    }
+    .modal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .modal-field{display:grid;gap:6px}
+    .modal-field label{font-size:13px;color:var(--muted);font-weight:600}
+    .modal-field input,.modal-field select,.modal-field textarea{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--panel-soft);outline:none}
+    .modal-actions{display:flex;justify-content:flex-end;gap:10px;padding-top:6px}
+    @media(max-width:1180px){.app{grid-template-columns:1fr}.modal{width:min(100%,560px)}.modal-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h1>Employee Management</h1>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="employee-management.html" class="nav-link">Employees</a>
+      <a href="department-management.html" class="nav-link">Departments & Designations</a>
+      <a href="attendance-management.html" class="nav-link">Attendance</a>
+      <a href="leave-management.html" class="nav-link">Leave</a>
+      <a href="performance-appraisal.html" class="nav-link">Performance</a>
+      <a href="project-management.html" class="nav-link active">Projects</a>
+      <a href="documents.html" class="nav-link">Documents</a>
+      <a href="payroll-management.html" class="nav-link">Payroll</a>
+      <a href="reports-management.html" class="nav-link">Reports & Analytics</a>
+      <a href="notifications.html" class="nav-link">Notifications</a>
+      <a href="settings.html" class="nav-link">Settings</a>
+    </aside>
+
+    <main class="main">
+      <section class="panel">
+        <div class="header-bar">
+          <div>
+            <h2>Project Management</h2>
+            <p class="text-muted">Create and track projects, managers, timelines and status.</p>
+          </div>
+          <button id="addProjectBtn" class="action-button">+ Add Project</button>
+        </div>
+
+        <div class="toolbar" style="margin-top:16px">
+          <div class="search-box"><span>🔍</span><input type="search" placeholder="Search projects..." aria-label="Search projects"></div>
+          <div class="filter-box"><select aria-label="Filter status"><option>All Status</option><option>Planning</option><option>Ongoing</option><option>Completed</option></select></div>
+          <div style="margin-left:auto"><button class="action-button secondary">Filter</button></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Project Name</th>
+                <th>Manager</th>
+                <th>Team Size</th>
+                <th>Status</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Website EMS</td>
+                <td><span class="avatar">D</span> David Brown</td>
+                <td>6</td>
+                <td><span class="status-pill">Ongoing</span></td>
+                <td>01/04/2025</td>
+                <td>30/06/2025</td>
+                <td><button class="action-button view-project" style="padding:8px 10px;font-size:13px">View</button></td>
+              </tr>
+              <tr>
+                <td>HR Portal</td>
+                <td><span class="avatar">S</span> Sarah Johnson</td>
+                <td>4</td>
+                <td><span class="status-pill">Completed</span></td>
+                <td>15/01/2025</td>
+                <td>15/04/2025</td>
+                <td><button class="action-button view-project" style="padding:8px 10px;font-size:13px">View</button></td>
+              </tr>
+              <tr>
+                <td>Mobile App</td>
+                <td><span class="avatar">M</span> Mike Smith</td>
+                <td>5</td>
+                <td><span class="status-pill">Ongoing</span></td>
+                <td>01/05/2025</td>
+                <td>31/08/2025</td>
+                <td><button class="action-button view-project" style="padding:8px 10px;font-size:13px">View</button></td>
+              </tr>
+              <tr>
+                <td>Payroll System</td>
+                <td><span class="avatar">E</span> Emily Davis</td>
+                <td>3</td>
+                <td><span class="status-pill">Planning</span></td>
+                <td>10/05/2025</td>
+                <td>—</td>
+                <td><button class="action-button view-project" style="padding:8px 10px;font-size:13px">View</button></td>
+              </tr>
+              <tr>
+                <td>Employee Portal</td>
+                <td><span class="avatar">J</span> James Wilson</td>
+                <td>7</td>
+                <td><span class="status-pill">Completed</span></td>
+                <td>01/02/2025</td>
+                <td>28/03/2025</td>
+                <td><button class="action-button view-project" style="padding:8px 10px;font-size:13px">View</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <div>Showing 1 to 5 of 12 entries</div>
+          <div class="pages">
+            <button class="page-button">&lt;</button>
+            <button class="page-button active">1</button>
+            <button class="page-button">2</button>
+            <button class="page-button">3</button>
+            <button class="page-button">...</button>
+            <button class="page-button">12</button>
+            <button class="page-button">&gt;</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Add Project Modal -->
+  <div class="modal-overlay" id="addProjectModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addProjectTitle">
+      <div class="modal-header">
+        <h3 id="addProjectTitle">Add Project</h3>
+        <button class="close-button" id="closeAddProject">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-grid">
+          <div class="modal-field"><label for="projectName">Project Name</label><input id="projectName" type="text" placeholder="Website EMS"></div>
+          <div class="modal-field"><label for="projectManager">Manager</label><input id="projectManager" type="text" placeholder="David Brown"></div>
+          <div class="modal-field"><label for="projectTeam">Team Size</label><input id="projectTeam" type="number" min="1" placeholder="6"></div>
+          <div class="modal-field"><label for="projectStatus">Status</label><select id="projectStatus"><option>Planning</option><option>Ongoing</option><option>Completed</option></select></div>
+          <div class="modal-field"><label for="projectStart">Start Date</label><input id="projectStart" type="date"></div>
+          <div class="modal-field"><label for="projectEnd">End Date</label><input id="projectEnd" type="date"></div>
+        </div>
+        <div class="modal-field"><label for="projectDesc">Description</label><textarea id="projectDesc" rows="3" placeholder="Short project description"></textarea></div>
+        <div class="modal-actions">
+          <button class="action-button secondary" id="cancelAddProject">Cancel</button>
+          <button class="action-button" id="saveProject">Save Project</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Project Modal -->
+  <div class="modal-overlay" id="viewProjectModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="viewProjectTitle">
+      <div class="modal-header">
+        <h3 id="viewProjectTitle">Project Details</h3>
+        <button class="close-button" id="closeViewProject">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-field"><label>Project</label><input id="viewName" readonly></div>
+        <div class="modal-field"><label>Manager</label><input id="viewManager" readonly></div>
+        <div class="modal-field"><label>Team Size</label><input id="viewTeam" readonly></div>
+        <div class="modal-field"><label>Status</label><input id="viewStatus" readonly></div>
+        <div class="modal-field"><label>Start - End</label><input id="viewDates" readonly></div>
+        <div class="modal-field"><label>Description</label><textarea id="viewDesc" rows="4" readonly></textarea></div>
+        <div class="modal-actions"><button class="action-button secondary" id="closeViewProjectBtn">Close</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Add Project modal wiring
+    const addProjectBtn = document.getElementById('addProjectBtn');
+    const addProjectModal = document.getElementById('addProjectModal');
+    const closeAddProject = document.getElementById('closeAddProject');
+    const cancelAddProject = document.getElementById('cancelAddProject');
+    const saveProject = document.getElementById('saveProject');
+
+    function openAddProject(e){e.preventDefault();addProjectModal.classList.add('active')}
+    function closeAdd(){addProjectModal.classList.remove('active')}
+    addProjectBtn.addEventListener('click',openAddProject);
+    closeAddProject.addEventListener('click',closeAdd);
+    cancelAddProject.addEventListener('click',closeAdd);
+    addProjectModal.addEventListener('click',(ev)=>{if(ev.target===addProjectModal)closeAdd()});
+    saveProject.addEventListener('click',()=>{ /* placeholder: save logic */ closeAdd(); alert('Project saved (demo)'); });
+
+    // View Project modal wiring
+    const viewProjectModal = document.getElementById('viewProjectModal');
+    const viewButtons = document.querySelectorAll('.view-project');
+    const closeViewProject = document.getElementById('closeViewProject');
+    const closeViewProjectBtn = document.getElementById('closeViewProjectBtn');
+
+    const viewName = document.getElementById('viewName');
+    const viewManager = document.getElementById('viewManager');
+    const viewTeam = document.getElementById('viewTeam');
+    const viewStatus = document.getElementById('viewStatus');
+    const viewDates = document.getElementById('viewDates');
+    const viewDesc = document.getElementById('viewDesc');
+
+    const projects = [
+      {name:'Website EMS',manager:'David Brown',team:6,status:'Ongoing',dates:'01/04/2025 - 30/06/2025',desc:'Corporate website and HR dashboard.'},
+      {name:'HR Portal',manager:'Sarah Johnson',team:4,status:'Completed',dates:'15/01/2025 - 15/04/2025',desc:'Internal HR portal with employee self-service.'},
+      {name:'Mobile App',manager:'Mike Smith',team:5,status:'Ongoing',dates:'01/05/2025 - 31/08/2025',desc:'Customer-facing mobile experience.'},
+      {name:'Payroll System',manager:'Emily Davis',team:3,status:'Planning',dates:'10/05/2025 - —',desc:'Modernize payroll and tax workflows.'},
+      {name:'Employee Portal',manager:'James Wilson',team:7,status:'Completed',dates:'01/02/2025 - 28/03/2025',desc:'Company intranet and resources.'}
+    ];
+
+    function openView(index){
+      const p = projects[index];
+      viewName.value = p.name; viewManager.value = p.manager; viewTeam.value = p.team; viewStatus.value = p.status; viewDates.value = p.dates; viewDesc.value = p.desc; viewProjectModal.classList.add('active');
+    }
+
+    viewButtons.forEach((btn,idx)=>btn.addEventListener('click',()=>openView(idx)));
+    function closeView(){viewProjectModal.classList.remove('active')}
+    closeViewProject.addEventListener('click',closeView);
+    closeViewProjectBtn.addEventListener('click',closeView);
+    viewProjectModal.addEventListener('click',(ev)=>{if(ev.target===viewProjectModal)closeView()});
+  </script>
+<script>
+(function(){
+  try{
+    const file = (location.pathname.split('/').pop() || 'dashboard.html').split('?')[0].split('#')[0];
+    const links = document.querySelectorAll('.sidebar .nav-link');
+    links.forEach(a=>a.classList.remove('active'));
+    for(const a of links){
+      const href = a.getAttribute('href');
+      if(!href) continue;
+      const hrefFile = href.split('/').pop();
+      if(hrefFile === file){ a.classList.add('active'); break; }
+    }
+  }catch(e){/* silent */}
+})();
+</script>
+</body>
+</html>

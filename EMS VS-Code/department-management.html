@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Department & Designation Management</title>
+  <style>
+            :root {
+      --bg: #f7f4ff;
+      --panel: rgba(255, 255, 255, 0.96);
+      --panel-soft: rgba(244, 247, 255, 0.95);
+      --text: #1f2937;
+      --muted: #5b6b8a;
+      --blue: #5b4bff;
+      --blue-soft: #e4e2ff;
+      --purple: #8f77ff;
+      --pink: #ff7eb6;
+      --teal: #2ac5a9;
+      --border: rgba(139, 152, 255, 0.22);
+      --shadow: 0 24px 60px rgba(64, 84, 171, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+            body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #f6f4ff 0%, #edf7ff 40%, #ffffff 100%);
+      color: var(--text);
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      padding: 24px;
+    }
+
+        .sidebar {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(240,243,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.24);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .sidebar h1 {
+      font-size: 16px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 24px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 15px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+            .nav-link.active, .nav-link:hover {
+      background: linear-gradient(135deg, rgba(91, 75, 255, 0.16), rgba(255, 126, 182, 0.14));
+      color: var(--blue);
+    }
+
+    .main {
+      display: grid;
+      gap: 24px;
+    }
+
+    .header-bar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .header-bar h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 18px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: var(--blue-soft);
+      color: var(--blue);
+      border-color: transparent;
+    }
+
+    .filter-box,
+    .search-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 18px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .filter-box button,
+    .search-box button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 220px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+            .action-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #5b4bff, #ff7eb6);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 16px 30px rgba(91, 75, 255, 0.18);
+    }
+
+    .action-button:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+            .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,247,255,0.95));
+      border: 1px solid rgba(139, 152, 255, 0.18);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 860px;
+    }
+
+    th,
+    td {
+      padding: 18px 16px;
+      text-align: left;
+      border-bottom: 1px solid #eceef1;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 700;
+      background: rgba(234,238,246,0.88);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr:hover {
+      background: rgba(75,124,236,0.07);
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--panel-soft);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-weight: 700;
+      margin-right: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--panel-soft);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .text-muted {
+      color: var(--muted);
+    }
+
+    .pagination {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pages {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .page-button {
+      min-width: 42px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .page-button.active {
+      background: var(--blue);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 30, 70, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 50;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      width: min(100%, 600px);
+      background: var(--panel);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px;
+      border-bottom: 1px solid #eceef1;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .close-button {
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 12px;
+      background: var(--panel-soft);
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .modal-        body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #f6f4ff 0%, #edf7ff 40%, #ffffff 100%);
+      color: var(--text);
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .modal-field {
+      display: grid;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .modal-field label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .modal-field input,
+    .modal-field select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--panel-soft);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 8px;
+    }
+
+    .modal-actions .secondary {
+      background: var(--panel-soft);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    @media (max-width: 720px) {
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1180px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .header-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        justify-content: space-between;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-box input {
+        width: 100%;
+      }
+
+      .table-container {
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h1>Employee Management System</h1>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="employee-management.html" class="nav-link">Employees</a>
+      <a href="department-management.html" class="nav-link active">Departments & Designations</a>
+      <a href="attendance-management.html" class="nav-link">Attendance</a>
+      <a href="leave-management.html" class="nav-link">Leave Management</a>
+      <a href="performance-appraisal.html" class="nav-link">Performance Appraisal</a>
+      <a href="project-management.html" class="nav-link">Projects</a>
+      <a href="documents.html" class="nav-link">Documents</a>
+      <a href="payroll-management.html" class="nav-link">Payroll</a>
+      <a href="reports-management.html" class="nav-link">Reports & Analytics</a>
+      <a href="notifications.html" class="nav-link">Notifications</a>
+      <a href="settings.html" class="nav-link">Settings</a>
+    </aside>
+
+    <main class="main">
+      <section class="panel">
+        <div class="header-bar">
+          <div>
+            <h2>Department & Designation Management</h2>
+            <p class="text-muted">View and manage departments, managers, and team structure.</p>
+          </div>
+          <button id="addDepartmentBtn" class="action-button">+ Add Department</button>
+        </div>
+
+        <div class="tabs">
+          <span class="tab active">Departments</span>
+          <span class="tab">Designations</span>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box">
+            <span>🔍</span>
+            <input type="search" placeholder="Search Department..." aria-label="Search Department" />
+          </div>
+          <div class="filter-box">
+            <button type="button">Filter</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Department Name</th>
+                <th>Manager</th>
+                <th>Employees</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Human Resources (HR)</td>
+                <td><span class="avatar">S</span> Sarah Johnson</td>
+                <td>12</td>
+                <td>Handles recruitment, employee relations and policies.</td>
+                <td><button class="action-button" style="padding: 10px 14px; font-size: 13px;">Edit</button></td>
+              </tr>
+              <tr>
+                <td>Information Technology (IT)</td>
+                <td><span class="avatar">D</span> David Brown</td>
+                <td>45</td>
+                <td>Handles all technology related operations and support.</td>
+                <td><button class="action-button" style="padding: 10px 14px; font-size: 13px;">Edit</button></td>
+              </tr>
+              <tr>
+                <td>Finance</td>
+                <td><span class="avatar">M</span> Michael Lee</td>
+                <td>18</td>
+                <td>Manages company financial activities and reporting.</td>
+                <td><button class="action-button" style="padding: 10px 14px; font-size: 13px;">Edit</button></td>
+              </tr>
+              <tr>
+                <td>Marketing</td>
+                <td><span class="avatar">E</span> Emily Davis</td>
+                <td>15</td>
+                <td>Handles marketing strategies and brand management.</td>
+                <td><button class="action-button" style="padding: 10px 14px; font-size: 13px;">Edit</button></td>
+              </tr>
+              <tr>
+                <td>Sales</td>
+                <td><span class="avatar">J</span> James Wilson</td>
+                <td>22</td>
+                <td>Handles sales, leads and customer relationships.</td>
+                <td><button class="action-button" style="padding: 10px 14px; font-size: 13px;">Edit</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <div>Showing 1 to 5 of 8 entries</div>
+          <div class="pages">
+            <button class="page-button">&lt;</button>
+            <button class="page-button active">1</button>
+            <button class="page-button">2</button>
+            <button class="page-button">...</button>
+            <button class="page-button">8</button>
+            <button class="page-button">&gt;</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="departmentModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add Department</h3>
+        <button class="close-button" id="closeDepartmentModal" aria-label="Close modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-grid">
+          <div class="modal-field">
+            <label for="departmentName">Department Name</label>
+            <input id="departmentName" type="text" placeholder="Enter department name" />
+          </div>
+          <div class="modal-field">
+            <label for="departmentManager">Manager</label>
+            <input id="departmentManager" type="text" placeholder="Enter manager name" />
+          </div>
+          <div class="modal-field">
+            <label for="departmentEmployees">Employees</label>
+            <input id="departmentEmployees" type="number" placeholder="Number of employees" />
+          </div>
+          <div class="modal-field">
+            <label for="departmentDescription">Description</label>
+            <input id="departmentDescription" type="text" placeholder="Department description" />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="action-button secondary" id="cancelDepartmentModal" type="button">Cancel</button>
+          <button class="action-button" id="saveDepartmentBtn" type="button">Save Department</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const addDepartmentBtn = document.getElementById('addDepartmentBtn');
+    const departmentModal = document.getElementById('departmentModal');
+    const closeDepartmentModal = document.getElementById('closeDepartmentModal');
+    const cancelDepartmentModal = document.getElementById('cancelDepartmentModal');
+
+    function openDepartmentModal(event) {
+      event.preventDefault();
+      departmentModal.classList.add('active');
+    }
+
+    function closeModal() {
+      departmentModal.classList.remove('active');
+    }
+
+    addDepartmentBtn.addEventListener('click', openDepartmentModal);
+    closeDepartmentModal.addEventListener('click', closeModal);
+    cancelDepartmentModal.addEventListener('click', closeModal);
+    departmentModal.addEventListener('click', (event) => {
+      if (event.target === departmentModal) {
+        closeModal();
+      }
+    });
+  </script>
+<script>
+(function(){
+  try{
+    const file = (location.pathname.split('/').pop() || 'dashboard.html').split('?')[0].split('#')[0];
+    const links = document.querySelectorAll('.sidebar .nav-link');
+    links.forEach(a=>a.classList.remove('active'));
+    for(const a of links){
+      const href = a.getAttribute('href');
+      if(!href) continue;
+      const hrefFile = href.split('/').pop();
+      if(hrefFile === file){ a.classList.add('active'); break; }
+    }
+  }catch(e){/* silent */}
+})();
+</script>
+</body>
+</html>
